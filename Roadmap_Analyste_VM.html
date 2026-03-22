@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap - Analyste en Gestion des Vulnérabilités</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2c3e50;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .wrapper { max-width: 1400px; margin: 0 auto; }
+        .header { 
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+        .header h1 { 
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .header p { 
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        .progress-bar { 
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .progress-fill { 
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .tabs { 
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .tab-btn { 
+            padding: 12px 24px;
+            border: none;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .tab-btn:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .content { 
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .roadmap { 
+            display: none;
+        }
+        .roadmap.active { 
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .timeline { 
+            position: relative;
+            padding: 20px 0;
+        }
+        .timeline::before { 
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #ecf0f1;
+        }
+        .phase { 
+            margin-bottom: 40px;
+            padding-left: 60px;
+            position: relative;
+        }
+        .phase::before { 
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .phase-title { 
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 12px;
+        }
+        .phase-subtitle { 
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+        .tasks { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .task { 
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .task:hover { 
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .task-title { 
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .task-checkbox { 
+            width: 18px;
+            height: 18px;
+            border: 2px solid #bdc3c7;
+            border-radius: 3px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .task-checkbox.done { 
+            background: #2ecc71;
+            border-color: #27ae60;
+        }
+        .task-desc { 
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+        .priority { 
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .priority-critical { background: #ffe5e5; color: #c0392b; }
+        .priority-high { background: #fff3e0; color: #e67e22; }
+        .priority-medium { background: #e3f2fd; color: #2196f3; }
+        .priority-low { background: #e8f5e9; color: #27ae60; }
+        .checklist { 
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .checklist-item { 
+            padding: 10px 0;
+            display: flex;
+            gap: 12px;
+            font-size: 14px;
+            color: #34495e;
+            align-items: flex-start;
+        }
+        .check { 
+            width: 20px;
+            height: 20px;
+            border: 2px solid #bdc3c7;
+            border-radius: 3px;
+            flex-shrink: 0;
+            cursor: pointer;
+            margin-top: 2px;
+        }
+        .check.done { 
+            background: #2ecc71;
+            border-color: #27ae60;
+        }
+        .metric { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .metric-title { 
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .metric-value { 
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .tool-section { 
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid #ecf0f1;
+        }
+        .tool-name { 
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .tool-info { 
+            font-size: 13px;
+            color: #555;
+            line-height: 1.7;
+        }
+        .danger-zone { 
+            background: #ffebee;
+            border-left: 4px solid #c0392b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .danger-title { 
+            color: #c0392b;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .success-zone { 
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .success-title { 
+            color: #27ae60;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .grid-2 { 
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        h2 { 
+            font-size: 24px;
+            color: #1e3c72;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        h3 { 
+            font-size: 18px;
+            color: #2c3e50;
+            margin: 20px 0 12px;
+        }
+        ul { 
+            list-style: none;
+            margin: 15px 0;
+        }
+        li { 
+            padding: 8px 0;
+            color: #555;
+            line-height: 1.8;
+            padding-left: 25px;
+            position: relative;
+        }
+        li:before { 
+            content: "▸";
+            color: #667eea;
+            position: absolute;
+            left: 0;
+        }
+        .footer { 
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 40px;
+            font-size: 13px;
+        }
+        @media (max-width: 768px) {
+            .header { padding: 25px; }
+            .header h1 { font-size: 24px; }
+            .tabs { flex-direction: column; }
+            .content { padding: 20px; }
+            .tasks { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="header">
+        <h1>📊 Roadmap - Analyste VM</h1>
+        <p>Feuille de route complète pour maîtriser votre rôle</p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('jour')">📅 Jour 1-5</button>
+        <button class="tab-btn" onclick="switchTab('semaine')">📆 Semaine 1</button>
+        <button class="tab-btn" onclick="switchTab('month')">📅 Mois 1</button>
+        <button class="tab-btn" onclick="switchTab('quarter')">🎯 Trimestre 1</button>
+        <button class="tab-btn" onclick="switchTab('skills')">🎓 Skills</button>
+        <button class="tab-btn" onclick="switchTab('tools')">🛠️ Outils</button>
+        <button class="tab-btn" onclick="switchTab('procedures')">📋 Procédures</button>
+    </div>
+
+    <div class="content">
+        <!-- JOUR 1-5 -->
+        <div id="jour" class="roadmap active">
+            <h2>Jours 1-5: Orientation et mise en place</h2>
+            <div class="timeline">
+                <div class="phase">
+                    <div class="phase-title">👋 Jour 1: Intégration</div>
+                    <div class="phase-subtitle">Comprendre le contexte, les enjeux, les stakeholders</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Rencontre avec le CISO
+                            </div>
+                            <div class="task-desc">Comprendre les attentes, les priorités, les défis actuels</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Visite des équipes IT Ops
+                            </div>
+                            <div class="task-desc">Introduire-vous, expliquer votre rôle, identifier les contacts clés</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Demander accès à tous les outils
+                            </div>
+                            <div class="task-desc">Tenable, RoboShadow, Microsoft Defender, Jira, Slack</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Documentation initial review
+                            </div>
+                            <div class="task-desc">Lire politiques existantes, processus, rapports précédents</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase">
+                    <div class="phase-title">🔍 Jour 2-3: Assessment</div>
+                    <div class="phase-subtitle">Cartographier l'environnement actuel</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Inventaire IT existant
+                            </div>
+                            <div class="task-desc">Collecter CMDB, liste serveurs, apps, endpoints gérés</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Identifier les environments
+                            </div>
+                            <div class="task-desc">Production vs non-prod, on-prem vs cloud, air-gapped</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Contacts propriétaires d'assets
+                            </div>
+                            <div class="task-desc">Créer spreadsheet avec departments, contacts, responsabilités</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Review rapports historiques
+                            </div>
+                            <div class="task-desc">Analyser trends, top vulnérabilités, taux remédiation passé</div>
+                            <span class="priority priority-medium">MOYENNE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase">
+                    <div class="phase-title">⚙️ Jour 4-5: Configuration initiale</div>
+                    <div class="phase-subtitle">Préparer l'infrastructure pour les scans</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Accès Tenable Nessus
+                            </div>
+                            <div class="task-desc">Vérifier login, permissions, créer workspace personnel</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Accès Defender + RoboShadow
+                            </div>
+                            <div class="task-desc">Vérifier configuration dashboards, alert channels</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Test accès Jira + Slack
+                            </div>
+                            <div class="task-desc">Créer account, rejoindre channels, paramétrer notifications</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Planning première réunion d'équipe
+                            </div>
+                            <div class="task-desc">Kickoff official, présenter roadmap, align expectations</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-zone">
+                <div class="success-title">✅ Objectif jour 5:</div>
+                <ul>
+                    <li>Vous comprenez la structure IT et le contexte de vulnérabilités existantes</li>
+                    <li>Vous avez l'accès à tous les outils critiques</li>
+                    <li>Vous avez identifié les contacts clés dans l'organisation</li>
+                    <li>Vous êtes prêt à lancer les scans de baseline</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SEMAINE 1 -->
+        <div id="semaine" class="roadmap">
+            <h2>Semaine 1: Lancer les scans de baseline</h2>
+            <div class="timeline">
+                <div class="phase">
+                    <div class="phase-title">🗓️ Lundi: Préparation Tenable</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Configurer scan template réseau
+                            </div>
+                            <div class="task-desc">Définir subnets, ports, credentials (SSH, SNMP, SMB)</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Importer CMDB dans Tenable
+                            </div>
+                            <div class="task-desc">Ajouter assets manuellement ou via API/CSV import</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Configurer scan découverte réseau
+                            </div>
+                            <div class="task-desc">Test ping simple sans credentials pour découvrir hosts inconnus</div>
+                            <span class="priority priority-medium">MOYENNE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase">
+                    <div class="phase-title">📋 Mardi: Tagging et stratégie</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Créer taxonomy tagging
+                            </div>
+                            <div class="task-desc">Documenter 7 dimensions: type, env, criticité, owner, localisation, conformité, statut</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Appliquer tags en masse
+                            </div>
+                            <div class="task-desc">Script ou bulk upload tags sur assets découverts</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Valider tags précision
+                            </div>
+                            <div class="task-desc">Spot check 20 assets, corriger erreurs, documenter exceptions</div>
+                            <span class="priority priority-medium">MOYENNE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase">
+                    <div class="phase-title">🔎 Mercredi: Premier scan</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                LANCER SCAN BASELINE
+                            </div>
+                            <div class="task-desc">Full network scan avec credentials. Attendre 24-48h résultats.</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Configurer alertes Defender
+                            </div>
+                            <div class="task-desc">Activer notifications pour Critical, évaluer High en batch</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Tester intégration RoboShadow
+                            </div>
+                            <div class="task-desc">Configurer Slack alerts, test alert test pour confirmer</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase">
+                    <div class="phase-title">📊 Jeudi-Vendredi: Analyse initiale</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Analyser résultats baseline
+                            </div>
+                            <div class="task-desc">Compter vulnérabilités par sévérité, identifier top assets</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Triage faux positifs
+                            </div>
+                            <div class="task-desc">Identifier et documenter fausses alertes (ex: services désactivés)</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Créer rapport initial
+                            </div>
+                            <div class="task-desc">Summary: total vulnérabilités, distribution, top 10 assets at-risk</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Présenter findings à CISO
+                            </div>
+                            <div class="task-desc">30 min meeting: baseline stats, quick wins identifiés, next steps</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-zone">
+                <div class="success-title">✅ Fin semaine 1:</div>
+                <ul>
+                    <li>Baseline scan lancé et résultats collectés</li>
+                    <li>Tous les outils configurés et testés</li>
+                    <li>Tagging stratégie en place</li>
+                    <li>Premier rapport de statut présenté à CISO</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- MOIS 1 -->
+        <div id="month" class="roadmap">
+            <h2>Mois 1: Établir le programme et créer momentum</h2>
+            <div class="timeline">
+                <div class="phase">
+                    <div class="phase-title">🚀 Semaines 1-2: Baseline & Triage intensif</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Complèter triage baseline
+                            </div>
+                            <div class="task-desc">Valider chaque vulnérabilité CRITIQUE et HAUTE, marquer faux positifs</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Créer scoring model
+                            </div>
+                            <div class="task-desc">Implémenter CVSS (40%) + Exploit (30%) + Asset (20%) + Exposure (10%)</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Prioriser top 50 vulnérabilités
+                            </div>
+                            <div class="task-desc">Appliquer scoring, identifier critiques à escalader immédiatement</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase">
+                    <div class="phase-title">📝 Semaine 3: Documentation & Processus</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Documenter processus remédiation
+                            </div>
+                            <div class="task-desc">Triage → Planification → Implémentation → Vérification avec SLA</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Créer templates Jira
+                            </div>
+                            <div class="task-desc">Bug tickets par sévérité avec fields: asset, CVSS, owner, SLA date</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Établir SLA formally
+                            </div>
+                            <div class="task-desc">Critique 15j, Haute 30j, Moyenne 60j, Basse 90j approuvés par CISO</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase">
+                    <div class="phase-title">📊 Semaine 4: Rapportage et escalade</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Créer dashboards mensuels
+                            </div>
+                            <div class="task-desc">Total par sévérité, CVSS moyenne, MTTD, MTTR, top assets at-risk</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Créer rapport mensuel
+                            </div>
+                            <div class="task-desc">Executive summary + trends + recommandations + escalations</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Réunion management escalade
+                            </div>
+                            <div class="task-desc">Présenter critiques à CISO et directeurs métier, demander actions</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Lancer scans mensuels récurrents
+                            </div>
+                            <div class="task-desc">Planifier scans: hebdo production, mensuelle non-prod, continue endpoints</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-title">🎯 Cibles fin mois 1:</div>
+                <ul style="color: white; margin-top: 10px;">
+                    <li>Baseline complète: 100% assets scannés</li>
+                    <li>Triage: 0% faux positifs en backlog</li>
+                    <li>Score risque: Identifié top 20 vulnérabilités critiques</li>
+                    <li>Processus: SLA et templates documentés et approuvés</li>
+                    <li>Rapportage: Rapport mensuel produit et présenté</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- TRIMESTRE 1 -->
+        <div id="quarter" class="roadmap">
+            <h2>Trimestre 1: Réduire les risques et stabiliser</h2>
+            <div class="timeline">
+                <div class="phase">
+                    <div class="phase-title">💪 Mois 2: Remédiation agressive</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Coordonner remédiation critiques
+                            </div>
+                            <div class="task-desc">Assigner à IT Ops, tracker statut, escalader si SLA risque</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Optimiser faux positifs
+                            </div>
+                            <div class="task-desc">Tuner policies Nessus, créer exclusions documentées, réduire bruit</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Intégrer DAST en CI/CD
+                            </div>
+                            <div class="task-desc">Si applicable: scans app security post-deployment automatisés</div>
+                            <span class="priority priority-medium">MOYENNE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Rapport mensuel #2
+                            </div>
+                            <div class="task-desc">Montrer progrès: % réduit critiques, MTTR amélioration, SLA conformité</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="phase">
+                    <div class="phase-title">📈 Mois 3: Stabilisation et automation</div>
+                    <div class="tasks">
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Automatiser création tickets
+                            </div>
+                            <div class="task-desc">API integration: Nessus → Jira auto-création pour haute/critique</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Lancer training équipes
+                            </div>
+                            <div class="task-desc">IT Ops, développement: comment utiliser outils, lire rapports, corriger</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Audit conformité interne
+                            </div>
+                            <div class="task-desc">Vérifier: couverture 100%, SLA respect, documentation complète</div>
+                            <span class="priority priority-high">HAUTE</span>
+                        </div>
+                        <div class="task">
+                            <div class="task-title">
+                                <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                                Rapport trimestriel
+                            </div>
+                            <div class="task-desc">Executive summary: KPI vs objectifs, recommandations, budget besoins</div>
+                            <span class="priority priority-critical">CRITIQUE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-zone">
+                <div class="success-title">✅ Objectifs fin Q1:</div>
+                <ul>
+                    <li>✓ 50%+ réduction vulnérabilités critiques vs baseline</li>
+                    <li>✓ MTTR moyen: 30 jours ou mieux</li>
+                    <li>✓ Conformité SLA: 90%+ pour chaque catégorie</li>
+                    <li>✓ Outils: 100% automation en place et testée</li>
+                    <li>✓ Équipes: Training complété, équipes autonomes</li>
+                </ul>
+            </div>
+
+            <div class="danger-zone">
+                <div class="danger-title">⚠️ Red flags à éviter Q1:</div>
+                <ul>
+                    <li>Ne pas laisser critiques ouvertes > 15j sans escalade</li>
+                    <li>Ne pas ignorer faux positifs - ils tuent la crédibilité</li>
+                    <li>Ne pas over-report - focus sur actionables seulement</li>
+                    <li>Ne pas négliger communication - rapport hebdo minimum</li>
+                    <li>Ne pas accepter excuses SLA sans documentation formelle</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- SKILLS -->
+        <div id="skills" class="roadmap">
+            <h2>🎓 Compétences à développer</h2>
+            <div class="grid-2">
+                <div class="tool-section">
+                    <div class="tool-name">Tenable Nessus</div>
+                    <div class="tool-info">
+                        <strong>Jour 1-5:</strong> Basics - créer templates, lancer scans<br>
+                        <strong>Semaine 2:</strong> Configuration credentials, tuning policies<br>
+                        <strong>Mois 1:</strong> API integration, bulk operations, reporting<br>
+                        <strong>Mois 2+:</strong> Plugin management, custom checks
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <div class="tool-name">Microsoft Defender</div>
+                    <div class="tool-info">
+                        <strong>Jour 1-5:</strong> Access, dashboard navigation<br>
+                        <strong>Semaine 1:</strong> Alert configuration, threat reading<br>
+                        <strong>Mois 1:</strong> Reporting, trend analysis<br>
+                        <strong>Mois 2+:</strong> Integration avec SIEM, automation
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <div class="tool-name">RoboShadow</div>
+                    <div class="tool-info">
+                        <strong>Jour 5:</strong> Setup alerts, understand feeds<br>
+                        <strong>Semaine 1:</strong> Threat intel interpretation<br>
+                        <strong>Mois 1:</strong> PoC assessment, correlation<br>
+                        <strong>Mois 2+:</strong> Advanced threat modeling
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <div class="tool-name">Jira Workflows</div>
+                    <div class="tool-info">
+                        <strong>Semaine 1:</strong> Create, assign, move tickets<br>
+                        <strong>Mois 1:</strong> Template creation, custom fields<br>
+                        <strong>Mois 2:</strong> SLA automation, bulk operations<br>
+                        <strong>Mois 3:</strong> API integration, reporting
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <div class="tool-name">CVSS Scoring</div>
+                    <div class="tool-info">
+                        <strong>Semaine 1:</strong> Learn v3.1 framework basics<br>
+                        <strong>Mois 1:</strong> Score accurately considering context<br>
+                        <strong>Mois 2+:</strong> Contextualize with organization risk
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <div class="tool-name">Communication & Reporting</div>
+                    <div class="tool-info">
+                        <strong>Mois 1:</strong> Write clear, concise reports<br>
+                        <strong>Mois 2:</strong> Present findings to non-technical stakeholders<br>
+                        <strong>Mois 3:</strong> Executive presentations, storytelling
+                    </div>
+                </div>
+            </div>
+
+            <h3>Certifications to Consider (6-12 mois)</h3>
+            <ul>
+                <li>CompTIA Security+: Foundational security knowledge</li>
+                <li>Certified Vulnerability Manager (CVM): Specialized VM role</li>
+                <li>GIAC Security Essentials (GSEC): Advanced hands-on</li>
+                <li>CEH (Certified Ethical Hacker): Penetration testing context</li>
+            </ul>
+        </div>
+
+        <!-- TOOLS -->
+        <div id="tools" class="roadmap">
+            <h2>🛠️ Outils - Setup et bonnes pratiques</h2>
+            
+            <h3>Tenable Nessus</h3>
+            <div class="tool-section">
+                <div class="tool-name">Configuration initial</div>
+                <div class="tool-info">
+                    <strong>Networks à scanner:</strong> 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16<br>
+                    <strong>Fréquence:</strong> Hebdomadaire production, mensuelle non-prod<br>
+                    <strong>Credentials:</strong> SSH (root), SNMP (read), SMB (domain account)<br>
+                    <strong>Plugins:</strong> Tous sauf denial of service, dangerous
+                </div>
+            </div>
+
+            <h3>Microsoft Defender for Vulnerability Management</h3>
+            <div class="tool-section">
+                <div class="tool-name">Configuration</div>
+                <div class="tool-info">
+                    <strong>Agents:</strong> Déployer sur tous Windows/Mac via Intune<br>
+                    <strong>Alertes:</strong> Critical/High en email + Slack<br>
+                    <strong>Scans:</strong> Journalière automatique<br>
+                    <strong>Integration:</strong> Connecter à Jira pour auto-tickets
+                </div>
+            </div>
+
+            <h3>RoboShadow</h3>
+            <div class="tool-section">
+                <div class="tool-name">Configuration</div>
+                <div class="tool-info">
+                    <strong>Data sources:</strong> Tous les feeds activés<br>
+                    <strong>Correlation:</strong> Avec CMDB pour impact assessment<br>
+                    <strong>Alerts:</strong> Slack: #security-critical en temps réel<br>
+                    <strong>Review:</strong> Quotidienne 9AM checkpoint
+                </div>
+            </div>
+
+            <h3>Jira Setup</h3>
+            <div class="tool-section">
+                <div class="tool-name">Workflow Template</div>
+                <div class="tool-info">
+                    <strong>Fields:</strong> Asset, CVSS, Owner, Due Date (SLA), Evidence<br>
+                    <strong>Automation:</strong> Auto-assign par tag/project<br>
+                    <strong>Transitions:</strong> Triage → Assigned → In Progress → Resolved<br>
+                    <strong>SLA:</strong> Escalate à jour X si pas résolu
+                </div>
+            </div>
+
+            <h3>Slack Channels</h3>
+            <div class="tool-section">
+                <div class="tool-name">Channel Structure</div>
+                <div class="tool-info">
+                    <strong>#security-critical:</strong> Real-time alerts (CRITICAL)<br>
+                    <strong>#vulnerability-alerts:</strong> Daily digest (HIGH)<br>
+                    <strong>#vuln-team:</strong> Internal team discussions<br>
+                    <strong>#escalations:</strong> SLA breaches, urgent decisions
+                </div>
+            </div>
+        </div>
+
+        <!-- PROCEDURES -->
+        <div id="procedures" class="roadmap">
+            <h2>📋 Procédures opérationnelles clés</h2>
+
+            <h3>Procédure quotidienne (30 min matin)</h3>
+            <div class="checklist">
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Vérifier alertes RoboShadow (zero-days, exploits actifs)
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Vérifier Slack #security-critical (nouveaux critiques)
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Vérifier Jira: vulnérabilités nouvelles/escalade (24h)
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Assigner vulnérabilités aux propriétaires (triage)
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Review dashboards Tenable/Defender pour tendances
+                </div>
+            </div>
+
+            <h3>Procédure hebdomadaire (2h mardi)</h3>
+            <div class="checklist">
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Générer rapport hebdo (format template pré-défini)
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Analyser nouvelles vulnérabilités détectées (top 20)
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Vérifier conformité SLA: assets dépassant délais
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Escalade: envoyer notification propriétaires en retard
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Réunion CISO briefing (30 min): status, blocages, escalades
+                </div>
+            </div>
+
+            <h3>Procédure mensuelle (4h fin mois)</h3>
+            <div class="checklist">
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Extraire données complètes: Nessus, Defender, Jira
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Analyser métriques: MTTD, MTTR, CVSS avg, couverture scans
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Créer visualisations (graphiques, trends, comparaisons)
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Rédiger rapport mensuel avec exec summary et recommandations
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Présenter à leadership et directeurs métier (1h réunion)
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" class="check" onchange="updateProgress()">
+                    Identifier quick wins pour mois suivant
+                </div>
+            </div>
+
+            <h3>Procédure escalade (urgence)</h3>
+            <div class="danger-zone">
+                <div class="danger-title">🚨 Quand escalader immédiatement:</div>
+                <div class="checklist">
+                    <div class="checklist-item">
+                        <input type="checkbox" class="check">
+                        CRITICAL trouvée → Call CISO dans l'heure
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="check">
+                        Exploit PoC public → Réunion d'urgence IT Ops + CISO
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="check">
+                        SLA CRITIQUE breachée > 5j → Executive notification
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" class="check">
+                        Asset critique sans remédiation plan → Director involvement
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Roadmap Analyste VM - Créée Mars 2026</p>
+        <p>✨ Utilisez les checkboxes pour tracker votre progression | Mettez à jour régulièrement</p>
+    </div>
+</div>
+
+<script>
+function switchTab(tabName) {
+    document.querySelectorAll('.roadmap').forEach(r => r.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+    
+    updateProgress();
+    window.scrollTo(0, 0);
+}
+
+function updateProgress() {
+    const allCheckboxes = document.querySelectorAll('.task-checkbox, .check');
+    const checkedCheckboxes = document.querySelectorAll('.task-checkbox.done, .check.done');
+    
+    if (allCheckboxes.length > 0) {
+        const percentage = (checkedCheckboxes.length / allCheckboxes.length) * 100;
+        document.getElementById('progressFill').style.width = percentage + '%';
+    }
+}
+
+document.querySelectorAll('.task-checkbox, .check').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            this.classList.add('done');
+        } else {
+            this.classList.remove('done');
+        }
+        updateProgress();
+    });
+});
+
+updateProgress();
+</script>
+</body>
+</html>
